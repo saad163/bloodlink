@@ -1,0 +1,827 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloodLink Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-red: #D32F2F;
+            --primary-red-hover: #b71c1c;
+            --dark-bg: #0a0a0a;
+            --card-bg: #141414;
+            --text-light: #f8f9fa;
+            --text-muted: #a0a0a0;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6, .brand-font {
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        /* Navbar Styling */
+        .navbar {
+            background: rgba(10, 10, 10, 0.9) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-logo {
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+            transition: transform 0.3s;
+        }
+
+        .navbar-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+            margin: 0 12px;
+            font-size: 1.05rem;
+            position: relative;
+            padding-bottom: 5px;
+            transition: color 0.3s;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary-red);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-red) !important;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .btn-primary-custom {
+            background-color: var(--primary-red);
+            color: var(--white);
+            border: 2px solid var(--primary-red);
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            background-color: var(--primary-red-hover);
+            border-color: var(--primary-red-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(211, 47, 47, 0.4);
+            color: var(--white);
+        }
+
+        .main-content {
+            padding: 120px 0 60px;
+            flex: 1;
+        }
+
+        /* Toggle Buttons */
+        .btn-toggle {
+            margin: 20px 10px;
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            border: 2px solid var(--primary-red);
+            color: var(--primary-red);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-toggle:hover {
+            background-color: rgba(211, 47, 47, 0.1);
+            color: var(--primary-red);
+        }
+
+        .active-btn {
+            background-color: var(--primary-red) !important;
+            color: var(--white) !important;
+            box-shadow: 0 5px 15px rgba(211, 47, 47, 0.4);
+        }
+
+        /* Search bars */
+        #searchBar,
+        #reqSearchBar {
+            max-width: 500px;
+            margin: 20px auto 40px;
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            color: var(--white);
+            border-radius: 50px;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+        }
+
+        #searchBar:focus, #reqSearchBar:focus {
+            background-color: #222;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 15px rgba(211, 47, 47, 0.2);
+            color: var(--white);
+        }
+
+        #donorsList, #requestsList {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+        }
+
+        /* Card Styling */
+        .donor-card, .request-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            padding: 25px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+            border-left: 5px solid var(--primary-red);
+        }
+
+        .donor-card:hover, .request-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(211, 47, 47, 0.3);
+            border-left-color: var(--primary-red);
+        }
+
+        .donor-header, .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 15px;
+        }
+
+        .donor-header h5, .request-header h5 {
+            margin: 0;
+            color: var(--white);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+        }
+
+        .blood-badge {
+            background: rgba(211, 47, 47, 0.2);
+            color: var(--primary-red);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .urgency-badge {
+            font-size: 0.9rem;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: 600;
+        }
+
+        .donor-details p, .request-details p {
+            margin-bottom: 10px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .donor-details i, .request-details i {
+            width: 25px;
+            color: var(--primary-red);
+            font-size: 1.1rem;
+        }
+
+        .whatsapp-btn {
+            background: #25D366;
+            color: white !important;
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-weight: 600;
+            margin-top: 15px;
+            border: none;
+        }
+
+        .whatsapp-btn:hover {
+            background: #1eb956;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .btn-fulfill {
+            width: 100%;
+            margin-top: 15px;
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-fulfill:hover {
+            background: var(--primary-red-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(211, 47, 47, 0.4);
+        }
+
+        /* Verification Modal Styling */
+        .verification-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            z-index: 1050;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .verification-content {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-top: 4px solid var(--primary-red);
+            border-radius: 16px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            position: relative;
+        }
+        
+        .verification-title {
+            color: var(--white);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .verification-input {
+            padding: 15px;
+            font-size: 1.5rem;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            color: var(--white);
+            border-radius: 8px;
+            width: 100%;
+            margin-bottom: 25px;
+            text-align: center;
+            letter-spacing: 5px;
+            font-weight: 700;
+        }
+        
+        .verification-input:focus {
+            border-color: var(--primary-red);
+            outline: none;
+            box-shadow: 0 0 15px rgba(211, 47, 47, 0.3);
+        }
+        
+        .verification-btn {
+            background: var(--primary-red);
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+        }
+        
+        .verification-btn:hover {
+            background: var(--primary-red-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(211, 47, 47, 0.4);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            color: #777;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-red);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #050505;
+            padding: 80px 0 20px;
+            border-top: 1px solid var(--glass-border);
+            margin-top: auto;
+        }
+
+        .footer-logo {
+            height: 80px;
+            margin-bottom: 20px;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .footer-heading {
+            color: var(--white);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-red);
+            padding-left: 5px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: var(--primary-red);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--glass-border);
+            text-align: center;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <img src="{% static 'images/Logo.png' %}" class="navbar-logo" alt="BloodLink Logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="/donor-registration.html">Register as Donor</a></li>
+          <li class="nav-item"><a class="nav-link" href="/blood-request.html">Request Blood</a></li>
+          <li class="nav-item"><a class="nav-link" href="/map/">Donor Map</a></li>
+          <li class="nav-item"><a class="nav-link" href="/index.html#myth-buster">Myth-Buster</a></li>
+          <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+            <a href="#contact" class="btn btn-primary-custom px-4 py-2" style="font-size: 0.9rem;">Contact Us</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div id="verificationModal" class="verification-modal">
+    <div class="verification-content">
+      <span class="close-modal" onclick="closeVerificationModal()">&times;</span>
+      <h3 class="verification-title">Verify Identity</h3>
+      <p class="text-muted text-center mb-4">Enter the 6-digit verification code provided during request creation to mark it as fulfilled.</p>
+      <input type="text" id="verificationCode" class="verification-input" placeholder="000000" maxlength="6">
+      <button id="verifyBtn" class="verification-btn">Verify & Mark Fulfilled</button>
+      <div id="verificationError" class="text-danger mt-3 text-center fw-bold d-none">
+        <i class="bi bi-x-circle me-1"></i> Incorrect code. Please try again.
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content container">
+    <div class="text-center mb-5">
+      <h2 class="brand-font text-white mb-4">BloodLink <span class="text-danger">Portal</span></h2>
+      <button id="showDonorsBtn" class="btn btn-outline-danger btn-toggle active-btn">Find Donors</button>
+      <button id="showRequestsBtn" class="btn btn-outline-danger btn-toggle">Active Requests</button>
+    </div>
+
+    <!-- Donors Section -->
+    <div id="donorsSection">
+      <div class="text-center">
+        <input id="searchBar" type="text" placeholder="Search donors by name or blood group...">
+      </div>
+      <div id="donorsList"></div>
+    </div>
+
+    <!-- Requests Section -->
+    <div id="requestsSection" style="display:none;">
+      <div class="text-center">
+        <input id="reqSearchBar" type="text" placeholder="Search requests by city or blood group...">
+      </div>
+      <div id="requestsList"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer" id="contact">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6 pe-lg-5">
+                <img src="{% static 'images/Logo.png' %}" class="footer-logo" alt="BloodLink Logo">
+                <p class="footer-text">BloodLink is an emergency blood donation network bridging the gap between donors and patients. We leverage real-time alerts and smart matching to ensure safe and timely transfusions.</p>
+                <div class="d-flex align-items-center mt-4">
+                    <i class="bi bi-telephone-fill text-danger fs-4 me-3"></i>
+                    <div>
+                        <div class="text-muted small text-uppercase">Emergency Helpline</div>
+                        <div class="fw-bold fs-5 text-white">+92 315 5713946</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-6">
+                <h5 class="footer-heading">Quick Links</h5>
+                <ul class="footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/#features">Features</a></li>
+                    <li><a href="/#how-it-works">How It Works</a></li>
+                    <li><a href="/#myth-buster">Myth Busters</a></li>
+                    <li><a href="/map/">Donor Map</a></li>
+                </ul>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <h5 class="footer-heading">Get Involved</h5>
+                <ul class="footer-links">
+                    <li><a href="/donor-registration.html">Register as Donor</a></li>
+                    <li><a href="/blood-request.html">Request Blood</a></li>
+                    <li><a href="/portal/">Donor Portal</a></li>
+                    <li><a href="#">Volunteer</a></li>
+                    <li><a href="#">Host a Drive</a></li>
+                </ul>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <h5 class="footer-heading">Connect With Us</h5>
+                <p class="footer-text mb-3">Follow us on social media for updates, success stories, and blood donation drives.</p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="social-icon"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="bi bi-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p class="mb-0">&copy; 2025 BloodLink. All rights reserved. Designed for saving lives.</p>
+        </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+            document.querySelector('.navbar').style.background = 'rgba(5, 5, 5, 0.95)';
+        } else {
+            document.querySelector('.navbar').style.background = 'rgba(10, 10, 10, 0.9)';
+        }
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+        document.cookie.split(';').forEach(c => {
+            const cookie = c.trim();
+            if (cookie.startsWith(name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            }
+        });
+        }
+        return cookieValue;
+    }
+
+    const donorsBtn = document.getElementById('showDonorsBtn');
+    const requestsBtn = document.getElementById('showRequestsBtn');
+    const donorsSection = document.getElementById('donorsSection');
+    const requestsSection = document.getElementById('requestsSection');
+
+    donorsBtn.addEventListener('click', () => {
+        donorsBtn.classList.add('active-btn');
+        requestsBtn.classList.remove('active-btn');
+        donorsSection.style.display = 'block';
+        requestsSection.style.display = 'none';
+        loadDonors(); 
+    });
+
+    requestsBtn.addEventListener('click', () => {
+        requestsBtn.classList.add('active-btn');
+        donorsBtn.classList.remove('active-btn');
+        requestsSection.style.display = 'block';
+        donorsSection.style.display = 'none';
+        loadRequests(); 
+    });
+
+    async function loadDonors() {
+        try {
+            const res = await fetch('/api/donors/');
+            const list = await res.json();
+            renderDonors(list);
+        } catch (err) {
+            console.error("Failed to fetch donors:", err);
+            const container = document.getElementById('donorsList');
+            container.innerHTML = `<div class="alert alert-danger w-100 text-center bg-dark border-danger text-light">Error loading donors: ${err.message}</div>`;
+        }
+    }
+
+    function renderDonors(list) {
+        const container = document.getElementById('donorsList');
+        container.innerHTML = '';
+        
+        list.forEach(d => {
+            const phone = d.phone.replace(/^0/, '92');
+            const message = `Assalamualaikum, I need ${d.blood_group} blood at ${d.colony}, ${d.city}. Please help if you can. I got your contact from BloodLink.`;
+            const waLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+            const card = document.createElement('div');
+            card.className = 'donor-card';
+            card.innerHTML = `
+                <div class="donor-header">
+                    <h5>${d.name}</h5>
+                    <span class="blood-badge">${d.blood_group}</span>
+                </div>
+                <div class="donor-details">
+                    <p><i class="bi bi-geo-alt"></i> ${d.colony}, ${d.city}</p>
+                    <p class="phone"><i class="bi bi-telephone"></i> ${d.phone}</p>
+                </div>
+                <a href="${waLink}" target="_blank" class="whatsapp-btn">
+                    <i class="bi bi-whatsapp me-2"></i> WhatsApp Now
+                </a>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    document.getElementById('searchBar').addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase().trim();
+        document.querySelectorAll('#donorsList .donor-card').forEach(card => {
+            const name = card.querySelector('h5').textContent.toLowerCase();
+            const bloodGroup = card.querySelector('.blood-badge').textContent.toLowerCase();
+            const location = card.querySelector('.donor-details p:first-child').textContent.toLowerCase();
+            const phone = card.querySelector('.phone').textContent.toLowerCase();
+            const allText = `${name} ${bloodGroup} ${location} ${phone}`;
+            card.style.display = allText.includes(query) ? 'block' : 'none';
+        });
+    });
+
+    async function loadRequests() {
+        try {
+            const res = await fetch('/api/requests/');
+            const list = await res.json();
+            renderRequests(list);
+        } catch (err) {
+            console.error("Failed to fetch requests:", err);
+        }
+    }
+
+    function getUrgencyBadge(level) {
+        switch (level) {
+            case "1": return '<span class="urgency-badge bg-danger text-white">Emergency</span>';
+            case "2": return '<span class="urgency-badge bg-warning text-dark">Critical</span>';
+            case "3": return '<span class="urgency-badge bg-info text-dark">Urgent</span>';
+            case "4": return '<span class="urgency-badge bg-secondary text-white">Normal</span>';
+            default: return '<span class="urgency-badge bg-secondary text-white">Unknown</span>';
+        }
+    }
+
+    function renderRequests(list) {
+        const container = document.getElementById('requestsList');
+        container.innerHTML = '';
+
+        list.forEach(req => {
+            const card = document.createElement('div');
+            card.className = 'request-card';
+
+            card.innerHTML = `
+            <div class="request-header">
+                <h5>${req.patient_name}</h5>
+                ${getUrgencyBadge(req.urgency_level)}
+            </div>
+            <div class="request-details">
+                <p><i class="bi bi-droplet-fill"></i> <strong class="text-white">${req.required_blood_group}</strong> blood needed</p>
+                <p><i class="bi bi-geo-alt-fill"></i> ${req.colony}, ${req.city}</p>
+                <p><i class="bi bi-hospital-fill"></i> ${req.hospital_name}</p>
+                <p><i class="bi bi-clock-history"></i> Posted: ${new Date(req.created_at).toLocaleDateString()}</p>
+            </div>
+            <form class="fulfillForm" data-id="${req.id}" data-verification="${req.verification_code}">
+                <button type="button" class="btn-fulfill fulfill-btn"><i class="bi bi-check-circle me-2"></i>I Donated</button>
+            </form>
+            `;
+            container.appendChild(card);
+        });
+
+        attachFulfillHandlers();
+    }
+
+    document.getElementById('reqSearchBar').addEventListener('input', function (e) {
+        const query = e.target.value.toLowerCase().trim();
+        document.querySelectorAll('#requestsList .request-card').forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(query) ? 'block' : 'none';
+        });
+    });
+
+    let currentRequestId = null;
+    let currentVerificationCode = null;
+
+    function openVerificationModal() {
+        document.getElementById('verificationModal').style.display = 'flex';
+    }
+
+    function closeVerificationModal() {
+        document.getElementById('verificationModal').style.display = 'none';
+        document.getElementById('verificationCode').value = '';
+        document.getElementById('verificationError').classList.add('d-none');
+    }
+
+    function attachFulfillHandlers() {
+        document.querySelectorAll('.fulfill-btn').forEach(button => {
+            button.addEventListener('click', function (e) {
+                const form = this.closest('form');
+                currentRequestId = form.dataset.id;
+                currentVerificationCode = form.dataset.verification;
+                openVerificationModal();
+            });
+        });
+    }
+
+    document.getElementById('verifyBtn').addEventListener('click', async function() {
+        const enteredCode = document.getElementById('verificationCode').value;
+        const errorElement = document.getElementById('verificationError');
+        
+        if (!enteredCode) {
+            errorElement.innerHTML = '<i class="bi bi-x-circle me-1"></i> Please enter verification code';
+            errorElement.classList.remove('d-none');
+            return;
+        }
+
+        if (enteredCode === currentVerificationCode) {
+            try {
+                const res = await fetch('/api/fulfill-request/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({
+                        request_id: currentRequestId,
+                        verification_code: enteredCode
+                    })
+                });
+
+                if (!res.ok) throw new Error(await res.text());
+
+                closeVerificationModal();
+                const cardToRemove = document.querySelector(`.fulfillForm[data-id="${currentRequestId}"]`);
+                if (cardToRemove) {
+                    cardToRemove.closest('.request-card').remove();
+                }
+                
+                // Show a nice success alert on the page
+                const container = document.getElementById('requestsSection');
+                const successMsg = document.createElement('div');
+                successMsg.className = 'alert alert-success text-center border-success fw-bold mt-3';
+                successMsg.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> Request successfully marked as fulfilled!';
+                container.insertBefore(successMsg, container.children[1]);
+                setTimeout(() => successMsg.remove(), 4000);
+
+            } catch (err) {
+                errorElement.innerHTML = '<i class="bi bi-x-circle me-1"></i> Failed: ' + err.message;
+                errorElement.classList.remove('d-none');
+            }
+        } else {
+            errorElement.innerHTML = '<i class="bi bi-x-circle me-1"></i> Incorrect verification code';
+            errorElement.classList.remove('d-none');
+        }
+    });
+
+    const params = new URLSearchParams(window.location.search);
+    const donorId = params.get('donor');
+    if (donorId) {
+      fetch(`/api/donors/${donorId}/`)
+        .then(r => r.json())
+        .then(d => {
+          document.getElementById('donorsSection').innerHTML = `
+            <div class="donor-card mx-auto" style="max-width:500px; margin-top:30px;">
+              <div class="donor-header">
+                <h5>${d.name}</h5>
+                <span class="blood-badge">${d.blood_group}</span>
+              </div>
+              <div class="donor-details">
+                <p><i class="bi bi-geo-alt"></i> ${d.colony}, ${d.city}</p>
+                <p><i class="bi bi-telephone"></i> ${d.phone}</p>
+              </div>
+              <a href="https://wa.me/${d.phone.replace(/^0/, '92')}?text=${encodeURIComponent(`Assalamualaikum ${d.name}, I need your help to donate ${d.blood_group} blood.`)}" 
+                target="_blank" class="whatsapp-btn mt-4">
+                <i class="bi bi-whatsapp me-2"></i> Chat on WhatsApp
+              </a>
+            </div>`;
+        });
+    }
+
+    window.addEventListener('click', function(event) {
+        if (event.target === document.getElementById('verificationModal')) {
+            closeVerificationModal();
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadDonors();
+        loadRequests();
+    });
+  </script>
+</body>
+</html>

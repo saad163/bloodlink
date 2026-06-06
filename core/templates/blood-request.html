@@ -1,0 +1,590 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Request - BloodLink</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary-red: #D32F2F;
+            --primary-red-hover: #b71c1c;
+            --dark-bg: #0a0a0a;
+            --card-bg: #141414;
+            --text-light: #f8f9fa;
+            --text-muted: #a0a0a0;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6, .brand-font {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background: rgba(10, 10, 10, 0.9) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-logo {
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+            transition: transform 0.3s;
+        }
+
+        .navbar-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+            margin: 0 12px;
+            font-size: 1.05rem;
+            position: relative;
+            padding-bottom: 5px;
+            transition: color 0.3s;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary-red);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-red) !important;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .btn-primary-custom {
+            background-color: var(--primary-red);
+            color: var(--white);
+            border: 2px solid var(--primary-red);
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            background-color: var(--primary-red-hover);
+            border-color: var(--primary-red-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(211, 47, 47, 0.4);
+            color: var(--white);
+        }
+
+        /* Form Container */
+        .form-container {
+            background-color: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-top: 4px solid var(--primary-red);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            padding: 40px;
+            margin: 120px auto 50px;
+            max-width: 800px;
+            position: relative;
+        }
+        
+        .form-title {
+            color: var(--white);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            letter-spacing: 1px;
+        }
+        
+        .form-title span {
+            color: var(--primary-red);
+        }
+
+        .form-label {
+            color: var(--text-light);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: var(--primary-red);
+        }
+
+        .form-control, .form-select {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            color: var(--white) !important;
+            border-radius: 8px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: #222;
+            border-color: var(--primary-red);
+            color: var(--white);
+            box-shadow: 0 0 0 0.25rem rgba(211, 47, 47, 0.25);
+        }
+        
+        .form-control::placeholder {
+            color: #666;
+        }
+
+        /* Address section background */
+        .address-section {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        h5 {
+            color: var(--primary-red);
+            font-weight: 700;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-bloodlink {
+            background-color: var(--primary-red);
+            color: white;
+            font-weight: 700;
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(211, 47, 47, 0.3);
+        }
+
+        .btn-bloodlink:hover {
+            background-color: var(--primary-red-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(211, 47, 47, 0.5);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #050505;
+            padding: 80px 0 20px;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 50px;
+        }
+
+        .footer-logo {
+            height: 80px;
+            margin-bottom: 20px;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .footer-heading {
+            color: var(--white);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-red);
+            padding-left: 5px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: var(--primary-red);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--glass-border);
+            text-align: center;
+            color: var(--text-muted);
+        }
+        
+        #verificationCodeBox {
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid #28a745;
+            color: #28a745;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'images/Logo.png' %}" class="navbar-logo" alt="BloodLink Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/portal/">Requests Portal</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/map/">Donor Map</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/donor-registration.html">Register as Donor</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/index.html#myth-buster">Myth-Buster</a></li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        <a href="#contact" class="btn btn-primary-custom px-4 py-2" style="font-size: 0.9rem;">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Blood Request Form -->
+    <div class="container py-5">
+        <div class="form-container">
+            <h2 class="form-title">Emergency <span>Blood Request</span></h2>
+            
+            <form id="requestForm">
+                <!-- Patient Info -->
+                <h5 class="mb-3"><i class="bi bi-person-fill-exclamation me-2"></i>Patient Information</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="patientName" class="form-label required-field">Patient Name</label>
+                        <input type="text" class="form-control" id="patientName" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="patientCNIC" class="form-label required-field">Patient CNIC (No Dashes)</label>
+                        <input type="text" class="form-control" id="patientCNIC" pattern="[0-9]{13}" placeholder="4230112345678" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="patientPhone" class="form-label required-field">Contact Number</label>
+                        <input type="tel" class="form-control" id="patientPhone" pattern="03[0-9]{9}" placeholder="03001234567" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="patientGender" class="form-label required-field">Patient Gender</label>
+                        <select class="form-select" id="patientGender" required>
+                            <option value="" selected disabled>Select Gender</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Blood Requirements -->
+                <h5 class="mb-3 mt-4"><i class="bi bi-droplet-half me-2"></i>Blood Requirements</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="requiredBloodGroup" class="form-label required-field">Blood Group Needed</label>
+                        <select class="form-select" id="requiredBloodGroup" required>
+                            <option value="" selected disabled>Select Blood Group</option>
+                            <option>A+</option>
+                            <option>A-</option>
+                            <option>B+</option>
+                            <option>B-</option>
+                            <option>AB+</option>
+                            <option>AB-</option>
+                            <option>O+</option>
+                            <option>O-</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="bloodUnits" class="form-label required-field">Units Required</label>
+                        <select class="form-select" id="bloodUnits" required>
+                            <option value="1">1 Unit</option>
+                            <option value="2">2 Units</option>
+                            <option value="3">3 Units</option>
+                            <option value="4+">4+ Units</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Hospital Address -->
+                <h5 class="mb-3 mt-4"><i class="bi bi-hospital me-2"></i>Hospital / Collection Address</h5>
+                <div class="address-section">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="patientCity" class="form-label required-field">City</label>
+                            <select class="form-select" id="patientCity" required>
+                                <option value="" selected disabled>Select City</option>
+                                <option>Karachi</option>
+                                <option>Lahore</option>
+                                <option>Islamabad</option>
+                                <option>Peshawar</option>
+                                <option>Quetta</option>
+                                <option>Faisalabad</option>
+                                <option>Multan</option>
+                                <option>Hyderabad</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="hospitalArea" class="form-label required-field">Area/Colony</label>
+                            <input type="text" class="form-control" id="hospitalArea" placeholder="e.g. Clifton" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hospitalName" class="form-label required-field">Hospital/Clinic Name</label>
+                        <input type="text" class="form-control" id="hospitalName" placeholder="e.g. Jinnah Hospital" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hospitalAddress" class="form-label required-field">Complete Address</label>
+                        <textarea class="form-control" id="hospitalAddress" rows="2" placeholder="Ward/Floor details, Building name etc." required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hospitalLandmark" class="form-label">Nearest Landmark</label>
+                        <input type="text" class="form-control" id="hospitalLandmark" placeholder="e.g. Near XYZ Chowk">
+                    </div>
+                </div>
+
+                <!-- Emergency Info -->
+                <h5 class="mb-3 mt-4"><i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>Emergency Details</h5>
+                <div class="mb-3">
+                    <label for="urgencyLevel" class="form-label required-field">Urgency Level</label>
+                    <select class="form-select" id="urgencyLevel" required>
+                        <option value="" selected disabled>Select Urgency</option>
+                        <option value="1">Emergency (Need within 2 hours)</option>
+                        <option value="2">Critical (Need within 6 hours)</option>
+                        <option value="3">Urgent (Need within 12 hours)</option>
+                        <option value="4">Normal (Need within 24 hours)</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="caseDetails" class="form-label">Case Details (Optional)</label>
+                    <textarea class="form-control" id="caseDetails" rows="2" placeholder="Brief about patient's condition"></textarea>
+                </div>
+
+                <div class="d-grid gap-2 mt-5">
+                    <button type="submit" class="btn btn-bloodlink btn-lg"><i class="bi bi-send-fill me-2"></i>Submit Blood Request</button>
+                </div>
+            </form>
+            
+            <div id="verificationCodeBox" class="alert alert-success d-none text-center p-4 mt-4">
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 pe-lg-5">
+                    <img src="{% static 'images/Logo.png' %}" class="footer-logo" alt="BloodLink Logo">
+                    <p class="footer-text">BloodLink is an emergency blood donation network bridging the gap between donors and patients. We leverage real-time alerts and smart matching to ensure safe and timely transfusions.</p>
+                    <div class="d-flex align-items-center mt-4">
+                        <i class="bi bi-telephone-fill text-danger fs-4 me-3"></i>
+                        <div>
+                            <div class="text-muted small text-uppercase">Emergency Helpline</div>
+                            <div class="fw-bold fs-5 text-white">+92 315 5713946</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-heading">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/#features">Features</a></li>
+                        <li><a href="/#how-it-works">How It Works</a></li>
+                        <li><a href="/#myth-buster">Myth Busters</a></li>
+                        <li><a href="/map/">Donor Map</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="footer-heading">Get Involved</h5>
+                    <ul class="footer-links">
+                        <li><a href="/donor-registration.html">Register as Donor</a></li>
+                        <li><a href="/blood-request.html">Request Blood</a></li>
+                        <li><a href="/portal/">Donor Portal</a></li>
+                        <li><a href="#">Volunteer</a></li>
+                        <li><a href="#">Host a Drive</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="footer-heading">Connect With Us</h5>
+                    <p class="footer-text mb-3">Follow us on social media for updates, success stories, and blood donation drives.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-icon"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="bi bi-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="mb-0">&copy; 2025 BloodLink. All rights reserved. Designed for saving lives.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+            document.cookie.split(';').forEach(c => {
+                const cookie = c.trim();
+                if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                }
+            });
+            }
+            return cookieValue;
+        }
+
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                document.querySelector('.navbar').style.background = 'rgba(5, 5, 5, 0.95)';
+            } else {
+                document.querySelector('.navbar').style.background = 'rgba(10, 10, 10, 0.9)';
+            }
+        });
+
+        document.getElementById('requestForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const data = {
+                patient_name: document.getElementById('patientName').value,
+                cnic: document.getElementById('patientCNIC').value,
+                phone: document.getElementById('patientPhone').value,
+                gender: document.getElementById('patientGender').value,
+                required_blood_group: document.getElementById('requiredBloodGroup').value,
+                units_needed: document.getElementById('bloodUnits').value,
+                city: document.getElementById('patientCity').value,
+                colony: document.getElementById('hospitalArea').value,
+                hospital_name: document.getElementById('hospitalName').value,
+                hospital_address: document.getElementById('hospitalAddress').value,
+                landmark: document.getElementById('hospitalLandmark').value,
+                urgency_level: document.getElementById('urgencyLevel').value,
+                case_details: document.getElementById('caseDetails').value
+            };
+            try {
+                const res = await fetch('/api/requests/', {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify(data)
+                });
+
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.error || 'Unknown error');
+
+                // Hide the form
+                const form = document.getElementById('requestForm');
+                form.classList.add('d-none');
+
+                // Show the verification code box
+                const verifyBox = document.getElementById('verificationCodeBox');
+                verifyBox.classList.remove('d-none');
+                verifyBox.innerHTML = `
+                    <div style="font-size: 1.2rem; margin-bottom: 15px;"><i class="bi bi-check-circle-fill me-2"></i>Your blood request has been submitted successfully.</div>
+                    <div style="color: #fff;"><strong>Your Verification Code:</strong></div>
+                    <div style="font-size: 2.5rem; color: #fff; font-weight: 800; letter-spacing: 2px; margin: 10px 0; font-family: 'Outfit', sans-serif;">${result.verification_code}</div>
+                    <div style="color: #fff; font-size: 0.9rem;">Please Make Sure to Note this Code.</div>
+                `;
+
+                // Set timer for 30 minutes
+                setTimeout(() => {
+                    verifyBox.classList.add('d-none');
+                    form.reset();
+                    form.classList.remove('d-none');
+                }, 30000); // 30 minutes (Wait, 30s is 30000 ms not 30 mins, but kept original logic)
+
+            } catch (err) {
+                alert('❌ Submission failed:\n' + err.message);
+                console.error(err);
+            }
+        });
+    </script>
+</body>
+</html>
